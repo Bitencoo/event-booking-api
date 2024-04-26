@@ -1,0 +1,10 @@
+PUT http://localhost:8080/events/1
+content-type: application/json
+
+
+{
+    "Name": "Sample Event Updated",
+    "Description": "This is a sample description of an event. UPDATED",
+    "Location": "1234 Sample Street, Example City, 90210",
+    "DateTime": "2023-04-25T15:04:05Z"
+}
