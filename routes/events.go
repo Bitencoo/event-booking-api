@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Bitencoo/event-booking-api.git/models"
+	"github.com/Bitencoo/event-booking-api.git/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,14 +40,29 @@ func getEventByID(c *gin.Context) {
 }
 
 func createEvent(c *gin.Context) {
+	token := c.Request.Header.Get("Authorization")
+
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"message" : "Not authorized!"})
+		return
+	}
+
+	err := utils.ValidateToken(token)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message" : "Not authorized!"})
+		return
+	}
+
 	var event models.Event
-	err := c.ShouldBindJSON(&event)
+	err = c.ShouldBindJSON(&event)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message" : "Could not parse the data!"})
+		return
 	}
 
-	event.ID = 1
+	event.ID = 1	
 	event.UserID = 1
 	err = event.Save()
 
