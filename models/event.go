@@ -122,3 +122,44 @@ func DeleteEvent(id int64) (error) {
 
 	return err
 }
+
+func (e Event) Register(userId int64) (int64, error) {
+	query := `INSERT INTO REGISTRATIONS(event_id, user_id) VALUES(?, ?)`
+
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return 0, err
+	}
+
+	defer stmt.Close()
+	result, err := stmt.Exec(e.ID, userId)
+
+	if err != nil {
+		return 0, err
+	}
+
+	registrationID, err := result.LastInsertId()
+
+	if err != nil {
+		return 0, err
+	}
+
+	return registrationID, nil
+}
+
+func (e Event) CancelRegistration(userId int64) error {
+	query := `DELETE FROM REGISTRATIONS WHERE event_id = ? AND user_id = ?`
+
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+	_, err = stmt.Exec(e.ID, userId)
+
+	return err
+}
+

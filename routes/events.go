@@ -30,7 +30,6 @@ func getEventByID(c *gin.Context) {
 	event, err := models.GetEventById(id)
 
 	if err != nil {
-		fmt.Printf("err: %v\n", err)
 		c.JSON(http.StatusNotFound, gin.H{"message": "Event not found!"})
 		return
 	}
@@ -52,7 +51,6 @@ func createEvent(c *gin.Context) {
 	err = event.Save()
 
 	if err != nil {
-		fmt.Printf("err: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not save the new Event, try again later!"})
 		return
 	}
